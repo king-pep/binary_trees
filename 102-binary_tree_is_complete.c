@@ -1,32 +1,62 @@
 #include "binary_trees.h"
-#include "11-binary_tree_size.c"
+
 /**
- * complete - checks if tree is complete or not
- * @tree: a pointer to the root of the tree
- * @index: index for right and left child
- * @count: the size of the tree
- * Return: 1 if complete 0 if not
+ * binary_tree_size - measures the size of a binary tree
+ *
+ * @tree: a pointer to the root node of the tree to measure the size
+ *
+ * Return: the size of the binary tree, or 0 if tree is NULL
  */
-int complete(const binary_tree_t *tree, int index, int count)
+
+size_t binary_tree_size(const binary_tree_t *tree)
 {
-if (tree == NULL)
-return (1);
-if (index >= count)
-return (0);
-return (complete(tree->left, 2 * index + 1, count) &&
-complete(tree->right, 2 * index + 2, count));
+	if (tree)
+	{
+		return (binary_tree_size(tree->left)
+				+ binary_tree_size(tree->right) + 1);
+	}
+
+	return (0);
 }
+
 /**
- * binary_tree_is_complete - checks if tree is complete or not
- * @tree: a pointer to the root of the tree
- * Return: 1 if complete 0 if not
+ * binary_tree_complete - recursive function of binary_tree_is_complete
+ *
+ * @tree: a pointer to the root node of the tree to check
+ * @count: the number of nodes in the tree
+ * @index: the number to compare count with
+ *
+ * Return: 1 if the tree is complete, 0 otherwise
  */
+
+int binary_tree_complete(const binary_tree_t *tree, size_t count, size_t index)
+{
+	if (tree)
+	{
+		if (index >= count)
+			return (0);
+		return (binary_tree_complete(tree->left, count, 2 * index + 1)
+				&& binary_tree_complete(tree->right, count, 2 * index + 2));
+	}
+
+	return (1);
+}
+
+/**
+ * binary_tree_is_complete - checks if a binary tree is complete
+ *
+ * @tree: a pointer to the root node of the tree to check
+ *
+ * Return: 1 if the tree is complete, 0 otherwise
+ */
+
 int binary_tree_is_complete(const binary_tree_t *tree)
 {
-int count = binary_tree_size(tree);
-int index = 0;
+	size_t count = binary_tree_size(tree);
+	size_t index = 0;
 
-if (tree == NULL)
-return (0);
-return (complete(tree, index, count));
+	if (tree)
+		return (binary_tree_complete(tree, count, index));
+
+	return (0);
 }
